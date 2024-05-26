@@ -2,13 +2,16 @@ version: "3.8"
 services:
   web:
     image: processmaker/pm4-core:${PM_VERSION}
+    networks: 
+      - pm4
     ports:
       - ${PM_APP_PORT}:80
       - ${PM_BROADCASTER_PORT}:6001
     environment:
-      - PM_APP_URL
-      - PM_APP_PORT
-      - PM_BROADCASTER_PORT
+      - PM_APP_URL=${PM_APP_URL}
+      - PM_APP_PORT=${PM_APP_PORT}
+      - PM_BROADCASTER_PORT=${PM_BROADCASTER_PORT}
+      - DB_PASS=${DB_PASS}
     volumes:
       - ${PM_DOCKER_SOCK}:/var/run/docker.sock
       - storage:/code/pm4/storage
@@ -20,9 +23,13 @@ services:
       - redis 
   redis:
     image: redis
+    networks:
+      - pm4
   mysql:
     image: mysql:5.7
     restart: always
+    networks:
+      - pm4
     environment:
       MYSQL_ROOT_PASSWORD: password 
       MYSQL_DATABASE: processmaker
@@ -30,6 +37,11 @@ services:
       MYSQL_PASSWORD: pass
     volumes:
       - database:/var/lib/mysql
+
 volumes:
   database:
   storage:
+
+networks:
+  pm4:
+    external: true

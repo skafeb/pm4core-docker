@@ -15,7 +15,7 @@ set -ex
 
 if [ ! -f ".env" ]; then
 
-    while ! mysqladmin ping -u pm -ppass -h mysql --silent; do
+    while ! mysqladmin ping -u pm -p "${DB_PASS}" -h mysql --silent; do
         echo "Waiting for mysql"
         sleep 1
     done
@@ -38,13 +38,13 @@ if [ ! -f ".env" ]; then
     --db-port=3306 \
     --db-name=processmaker \
     --db-username=pm \
-    --db-password=pass \
+    --db-password=${DB_PASS} \
     --data-driver=mysql \
     --data-host=mysql \
     --data-port=3306 \
     --data-name=processmaker \
     --data-username=pm \
-    --data-password=pass \
+    --data-password=${DB_PASS} \
     --redis-host=redis
     
 
